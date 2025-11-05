@@ -1,0 +1,124 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+export default function ServiceForm() {
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    try {
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/services`, {
+        name,
+        description,
+        category
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      setSuccess('✅ Se ha agregado correctamente');
+
+      setTimeout(() => {
+        navigate('/admin');
+      }, 1500);
+    } catch (err) {
+      setError('Error al crear el servicio');
+    }
+  };
+
+  return (
+    <div
+      className="min-h-screen flex items-center justify-center bg-[#2e387d]"
+      style={{ fontFamily: '"Roboto SemiCondensed", sans-serif' }}
+    >
+      <div className="h-full w-full max-w-md space-y-6 bg-white rounded-xl shadow-lg overflow-y-auto">
+
+        {/* Botón de retroceso y listado */}
+        <div className="sticky top-0 bg-white z-10 p-1 flex justify-between items-center">
+          <button
+            onClick={() => navigate(-1)}
+            className="group flex p-3 rounded-full hover:bg-gray-100 transition-colors"
+          >
+            <svg
+              className="w-8 h-8 text-black group-hover:text-gray-700"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+          </button>
+
+          <button
+            onClick={() => navigate('/admin/services')}
+            className="text-sm font-semibold text-blue-700 hover:underline mr-4"
+          >
+            Ver listado
+          </button>
+        </div>
+
+        {/* Formulario */}
+        <div className="p-6">
+          <h2 className="text-2xl font-bold mb-4 text-blue-800">Crear Servicio</h2>
+
+          <form onSubmit={handleSubmit}>
+            <label className="block mb-2 font-medium text-gray-700">Nombre</label>
+            <input
+              type="text"
+              className="w-full border px-3 py-2 rounded mb-4"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Ej. Mantenimiento preventivo"
+              required
+            />
+
+            <label className="block mb-2 font-medium text-gray-700">Descripción</label>
+            <textarea
+              className="w-full border px-3 py-2 rounded mb-4"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Ej. Revisión y ajuste de equipos industriales"
+              required
+            />
+
+            <label className="block mb-2 font-medium text-gray-700">Categoría</label>
+            <input
+              type="text"
+              className="w-full border px-3 py-2 rounded mb-4"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              placeholder="Ej. Mecánica"
+              required
+            />
+
+            {error && <p className="text-red-500 mb-2">{error}</p>}
+
+            <button
+              type="submit"
+              className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded w-full"
+            >
+              Guardar
+            </button>
+          </form>
+
+          {success && (
+            <div className="mt-4 text-green-600 text-center font-medium">
+              {success}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
