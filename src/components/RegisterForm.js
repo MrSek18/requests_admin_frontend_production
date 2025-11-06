@@ -432,15 +432,6 @@ const RegisterForm = () => {
           </div>
         </form>
 
-        <div className="text-center text-sm text-gray-600">
-          ¿Ya tienes una cuenta?{" "}
-          <Link
-            to="/login"
-            className="font-medium text-[#000AC7] hover:text-[#3940CF] tracking-[0.10em] transition-colors"
-          >
-            Inicia sesión
-          </Link>
-        </div>
       </div>
     </div>
   );
