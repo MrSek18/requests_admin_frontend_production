@@ -12,6 +12,7 @@ const Dashboard = ({ user, onLogout }) => {
   const onLogoutRef = useRef(onLogout);
   onLogoutRef.current = onLogout;
 
+  // useEffect para datos del usuario
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -53,8 +54,9 @@ const Dashboard = ({ user, onLogout }) => {
     };
 
     fetchUserData();
-  }, [user]);
+  }, [user, setToken, setUserData, setError, setLoading]);
 
+  // useEffect para requerimientos recientes
   useEffect(() => {
     const fetchRequerimientos = async () => {
       try {
@@ -76,7 +78,7 @@ const Dashboard = ({ user, onLogout }) => {
     };
 
     fetchRequerimientos();
-  }, [user]);
+  }, [user, setRequerimientos]);
 
   if (loading) {
     return (
