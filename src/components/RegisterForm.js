@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate,  } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -139,8 +139,8 @@ const RegisterForm = () => {
       // Preparar payload
       const payload = { ...formData, "g-recaptcha-response": token };
 
-      // Llamar API
-      const response = await axios.post(
+      // Llamar API (sin guardar en variable no usada)
+      await axios.post(
         `${process.env.REACT_APP_API_URL}/api/register`,
         payload,
         {
@@ -431,7 +431,6 @@ const RegisterForm = () => {
             </button>
           </div>
         </form>
-
       </div>
     </div>
   );
