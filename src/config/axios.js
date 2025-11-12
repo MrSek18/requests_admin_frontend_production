@@ -5,6 +5,7 @@ axios.defaults.baseURL =
   "https://requests-admin-backend-production.onrender.com/api";
 axios.defaults.headers.common["Accept"] = "application/json";
 
+//another comment
 // Interceptor para añadir el token
 axios.interceptors.request.use((config) => {
   const authData = JSON.parse(localStorage.getItem("auth"));
