@@ -154,6 +154,7 @@ const RegisterForm = () => {
     } catch (err) {
       // Log de error
       console.error("Error al registrar:", err);
+      console.log("Respuesta backend:", err.response?.data);
 
       // Mostrar errores del backend si existen
       if (err.response?.data?.errors) {
