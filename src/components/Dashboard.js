@@ -6,8 +6,8 @@ const Dashboard = ({ user, onLogout }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [setRequerimientos] = useState([]);
-  const [setToken] = useState(null);
+  const [requerimientos, setRequerimientos] = useState([]);
+  const [token, setToken] = useState(null);
   // Ref para evitar dependencias cambiantes en onLogout
   const onLogoutRef = useRef(onLogout);
   onLogoutRef.current = onLogout;
@@ -54,7 +54,7 @@ const Dashboard = ({ user, onLogout }) => {
     };
 
     fetchUserData();
-  }, [user, setToken, setUserData, setError, setLoading]);
+  }, [user]);
 
   // useEffect para requerimientos recientes
   useEffect(() => {
@@ -78,7 +78,7 @@ const Dashboard = ({ user, onLogout }) => {
     };
 
     fetchRequerimientos();
-  }, [user, setRequerimientos]);
+  }, [user]);
 
   if (loading) {
     return (
