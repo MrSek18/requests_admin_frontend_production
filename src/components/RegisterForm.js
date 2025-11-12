@@ -138,6 +138,7 @@ const RegisterForm = () => {
 
       // Preparar payload
       const payload = { ...formData, "g-recaptcha-response": token };
+      console.log("Payload enviado:", payload);
 
       // Llamar API (sin guardar en variable no usada)
       await axios.post(
