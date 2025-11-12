@@ -201,18 +201,8 @@ function LoginForm({ onLogin }) {
                 "Ingresar"
               )}
             </button>
-            
           </div>
         </form>
-
-        <div className="text-center text-sm text-gray-600 mt-5">
-          <a
-            href="#"
-            className="font-medium text-[#000AC7] hover:text-[#3940CF] tracking-[0.10em]"
-          >
-            Olvidé mi contraseña
-          </a>
-        </div>
       </div>
     </div>
   );

@@ -1,6 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
 import api from "../api";
 import AdminActions from './AdminActions';
 
