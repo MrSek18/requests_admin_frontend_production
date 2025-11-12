@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api"; // <-- usa tu instancia de Axios con baseURL
 
@@ -49,9 +49,9 @@ export default function Configuracion({ user, onLogout }) {
     }
 
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    const response = await api.put(`/api/admins/${user.id}`, {
-      [field]: formData[field],
-    });
+    // const response = await api.put(`/api/admins/${user.id}`, {
+    //   [field]: formData[field],
+    // });
 
     setStatusMessage((prev) => ({
       ...prev,

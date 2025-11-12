@@ -1,14 +1,13 @@
 import { useEffect, useState, useRef } from "react";
 import api from "../api";
-import AdminActions from './AdminActions';
-
+import AdminActions from "./AdminActions";
 
 const Dashboard = ({ user, onLogout }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [requerimientos, setRequerimientos] = useState([]);
-  const [token, setToken] = useState(null);
+  const [setRequerimientos] = useState([]);
+  const [setToken] = useState(null);
   // Ref para evitar dependencias cambiantes en onLogout
   const onLogoutRef = useRef(onLogout);
   onLogoutRef.current = onLogout;
@@ -28,8 +27,6 @@ const Dashboard = ({ user, onLogout }) => {
         const response = await api.get("/api/admin", {
           withCredentials: true,
         });
-
-        
 
         if (!response.data?.admin) {
           throw new Error("Estructura de respuesta inesperada");
@@ -136,9 +133,8 @@ const Dashboard = ({ user, onLogout }) => {
               Cerrar sesión
             </button>
           </div>
-          
-          <AdminActions />
 
+          <AdminActions />
         </div>
       </div>
     </div>
