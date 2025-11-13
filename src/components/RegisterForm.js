@@ -21,38 +21,6 @@ const RegisterForm = () => {
   const [passwordStrength, setPasswordStrength] = useState(0);
   const navigate = useNavigate();
 
-  // Cargar reCAPTCHA v3
-  useEffect(() => {
-    const scriptId = "google-recaptcha-v3";
-
-    if (document.getElementById(scriptId)) {
-      if (window.grecaptcha) setRecaptchaReady(true);
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.id = scriptId;
-    script.src = `https://www.google.com/recaptcha/api.js?render=${process.env.REACT_APP_RECAPTCHA_SITE_KEY}`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => {
-      const checkRecaptcha = () => {
-        if (window.grecaptcha?.execute) setRecaptchaReady(true);
-        else setTimeout(checkRecaptcha, 100);
-      };
-      checkRecaptcha();
-    };
-    script.onerror = () =>
-      setGlobalError("Error al cargar reCAPTCHA. Recarga la página.");
-
-    document.body.appendChild(script);
-
-    return () => {
-      const scriptElement = document.getElementById(scriptId);
-      if (scriptElement) document.body.removeChild(scriptElement);
-    };
-  }, []);
-
   // Calcular fortaleza de contraseña
   useEffect(() => {
     let strength = 0;
@@ -62,16 +30,6 @@ const RegisterForm = () => {
     if (/[@$!%*#?&]/.test(formData.password)) strength++;
     setPasswordStrength(strength);
   }, [formData.password]);
-
-  const getRecaptchaToken = async () => {
-    if (!window.grecaptcha?.execute)
-      throw new Error("reCAPTCHA no está disponible");
-
-    return await window.grecaptcha.execute(
-      process.env.REACT_APP_RECAPTCHA_SITE_KEY,
-      { action: "register" }
-    );
-  };
 
   const validateField = (name, value) => {
     const errors = { ...fieldErrors };
@@ -133,12 +91,9 @@ const RegisterForm = () => {
 
     try {
       // Obtener token reCAPTCHA
-      const token = await getRecaptchaToken();
-      console.log("Token reCAPTCHA:", token);
 
       // Preparar payload
-      const payload = { ...formData, "g-recaptcha-response": token };
-      console.log("Payload enviado:", payload);
+      const payload = { ...formData };
 
       // Llamar API (sin guardar en variable no usada)
       await axios.post(
@@ -154,7 +109,6 @@ const RegisterForm = () => {
     } catch (err) {
       // Log de error
       console.error("Error al registrar:", err);
-      console.log("Respuesta backend:", err.response?.data);
 
       // Mostrar errores del backend si existen
       if (err.response?.data?.errors) {
@@ -396,11 +350,9 @@ const RegisterForm = () => {
           <div className="pt-2">
             <button
               type="submit"
-              disabled={isLoading || !recaptchaReady}
+              disabled={isLoading}
               className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#000AC7] hover:bg-[#3940CF] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0E4D30] tracking-[0.10em] transition-colors ${
-                isLoading || !recaptchaReady
-                  ? "opacity-75 cursor-not-allowed"
-                  : ""
+                isLoading ? "opacity-75 cursor-not-allowed" : ""
               }`}
             >
               {isLoading ? (
