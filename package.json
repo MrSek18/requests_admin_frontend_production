@@ -42,5 +42,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "main": "main.js",
+  "script": {
+    "start": "react-scripts start",
+    "electron": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^39.2.1",
+    "electron-packager": "^17.1.2"
   }
 }

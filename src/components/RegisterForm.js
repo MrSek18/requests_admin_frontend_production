@@ -140,6 +140,23 @@ const RegisterForm = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#2e387d]">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg bg-white">
+        <div className="absolute top-10  z-10 p-1">
+          <button
+            onClick={() => navigate(-1)}
+            className="group flex p-3 rounded-full hover:bg-gray-100 transition-colors"
+          >
+            <svg
+              className="w-8 h-8 text-black group-hover:text-gray-700"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+          </button>
+        </div>
+
         <div className="flex justify-center">
           <img
             src="/imgs/app_admin_logo.png"
