@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api';
+import { warmUpDatabase } from "../../utils/warmUp";
 
 export default function ServiceForm() {
   const [name, setName] = useState('');
@@ -16,23 +17,28 @@ export default function ServiceForm() {
     setSuccess('');
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/services`, {
+
+      await warmUpDatabase();
+
+      const authData = JSON.parse(localStorage.getItem("auth"));
+      const token = authData?.token;
+
+      await api.post("/services", {
         name,
         description,
         category
       }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
+        headers: { Authorization: `Bearer ${token}`}
       });
 
-      setSuccess('✅ Se ha agregado correctamente');
+      setSuccess(' Se ha agregado correctamente');
 
       setTimeout(() => {
-        navigate('/admin');
+        navigate('/admin/services');
       }, 1500);
     } catch (err) {
-      setError('Error al crear el servicio');
+      console.error('Error al crear el servicio:', err);
+      setError('Error al crear el servicio:');
     }
   };
 

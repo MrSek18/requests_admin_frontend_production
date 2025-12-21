@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api';
+import { warmUpDatabase } from "../../utils/warmUp";
 
 export default function ServiceList() {
   const [services, setServices] = useState([]);
@@ -8,13 +9,27 @@ export default function ServiceList() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/api/services`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+
+    const fetchServices = async () => {
+      try{
+        await warmUpDatabase();
+        
+        const authData = JSON.parse(localStorage.getItem("auth"));
+        const token = authData?.token;
+
+        const res = await api.get("/services", {
+          headers: { Authorization: `Bearer ${token}`}
+        });
+
+        setServices(res.data);
+
+      } catch (err) {
+        console.error("Error al cargar servicios:", err);
+        setError("Error al cargar servicios");
       }
-    })
-    .then(res => setServices(res.data))
-    .catch(() => setError('Error al cargar servicios'));
+    }
+    
+    fetchServices();
   }, []);
 
   return (

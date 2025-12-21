@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api';
+import { warmUpDatabase } from "../../utils/warmUp";
 
 export default function RepresentativeList() {
   const [representatives, setRepresentatives] = useState([]);
@@ -8,13 +9,26 @@ export default function RepresentativeList() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/api/representatives`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+
+    const fetchRepresentatives = async () => {
+      try {
+        await warmUpDatabase();
+        const authData = JSON.parse(localStorage.getItem("auth"));
+        const token = authData?.token;
+
+        const res = await api.get("/representatives", {
+          headers: { Authorization: `Bearer ${token}`}
+        });
+        
+        setRepresentatives(res.data);
+      } catch (err) {
+        console.error("Error al cargar representantes: ", err);
+        setError("Error al cargar representantes");
       }
-    })
-    .then(res => setRepresentatives(res.data))
-    .catch(() => setError('Error al cargar representantes'));
+    };
+
+    fetchRepresentatives();
+
   }, []);
 
   return (

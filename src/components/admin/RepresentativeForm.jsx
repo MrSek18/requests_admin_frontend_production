@@ -1,7 +1,8 @@
 // src/components/admin/RepresentativeForm.jsx
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api';
+import { warmUpDatabase } from "../../utils/warmUp";
 
 export default function RepresentativeForm() {
   const [name, setName] = useState('');
@@ -17,13 +18,26 @@ export default function RepresentativeForm() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/api/companies`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+
+    const fetchCompanies = async () => {
+      try {
+        await warmUpDatabase();
+        const authData = JSON.parse(localStore.getItem("auth"));
+        const token = authData?.token;
+
+        const res = await api.get("/companies", {
+          headers: { Authorizacion: `Bearer ${token}`}
+        });
+
+        setCompanies(res.data);
+      } catch (err) {
+        console.error("Error al cargar compañías: ", err);
+        setError("Error al cargar compañías");
       }
-    })
-    .then(res => setCompanies(res.data))
-    .catch(() => setError('Error al cargar compañías'));
+    };
+
+    fetchCompanies();
+
   }, []);
 
   const handleSubmit = async (e) => {
@@ -32,33 +46,35 @@ export default function RepresentativeForm() {
     setSuccess('');
 
     try {
-      const repRes = await axios.post(`${process.env.REACT_APP_API_URL}/api/representatives`, {
+
+      await warmUpDatabase();
+      const authData = JSON.parse(localStorage.getItem("auth"));
+      const token = authData?.token;
+
+      const repRes = await api.post("/representatives", {
         name, dni, phone, email, role
       }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+        headers: { Authorization: `Bearer ${token}`}
+      })
 
       const representativeId = repRes.data.representative.id;
 
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/company-representatives`, {
+      await api.post("/company-representatives", {
         company_id: companyId,
         representative_id: representativeId,
         position
       }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+        headers: {Authorization: `Bearer ${token}`}
+      })
 
-      setSuccess('✅ Representante registrado correctamente');
+      setSuccess(' Representante registrado correctamente');
 
       setTimeout(() => {
         navigate('/admin/representatives');
       }, 1500);
     } catch (err) {
-      setError('Error al registrar representante');
+      console.error('Error al registrar representante:', err);
+      setError("Error al registrar representante");
     }
   };
 

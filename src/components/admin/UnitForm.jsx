@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api';
+import { warmUpDatabase } from "../../utils/warmUp";
 
 export default function UnitForm() {
   const [name, setName] = useState('');
@@ -15,21 +16,25 @@ export default function UnitForm() {
     setSuccess('');
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/units`, {
-        name,
+
+      await warmUpDatabase();
+      const authData = JSON.parse(localStorage.getItem("auth"));
+      const token = authData?.token;
+
+      await api.post("/units", {
+        name, 
         abbreviation
       }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
+        headers: { Authorization: `Bearer ${token}`}
       });
 
-      setSuccess('✅ Se ha agregado correctamente');
+      setSuccess('Se ha agregado correctamente');
 
       setTimeout(() => {
-        navigate('/admin');
-      }, 1500); // espera 1.5 segundos antes de redirigir
+        navigate('/admin/units');
+      }, 1500); 
     } catch (err) {
+      console.error("Error al crear unidad: ", err);
       setError('Error al crear la unidad');
     }
   };
