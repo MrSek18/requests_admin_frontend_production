@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api';
-import { warmUpDatabase } from "./utils/warmUp";
+import { warmUpDatabase } from "../../utils/warmUp";
 
 export default function CompanyList() {
   const [companies, setCompanies] = useState([]);

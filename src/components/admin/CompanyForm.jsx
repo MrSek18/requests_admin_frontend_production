@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api';
-import { warmUpDatabase } from "./utils/warmUp";
+import { warmUpDatabase } from "../../utils/warmUp";
 
 export default function CompanyForm() {
   const [name, setName] = useState('');
