@@ -22,7 +22,7 @@ export default function RepresentativeForm() {
     const fetchCompanies = async () => {
       try {
         await warmUpDatabase();
-        const authData = JSON.parse(localStore.getItem("auth"));
+        const authData = JSON.parse(localStorage.getItem("auth"));
         const token = authData?.token;
 
         const res = await api.get("/companies", {
