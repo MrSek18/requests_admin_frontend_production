@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
+import { warmUpDatabase } from "./utils/warmUp";
 
 export default function CompanyForm() {
   const [name, setName] = useState('');
@@ -19,7 +20,11 @@ export default function CompanyForm() {
     setSuccess('');
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/companies`, {
+      await warmUpDatabase();
+      const authData = JSON.parse(localStorage.getItem("auth"));
+      const token = authData?.token;
+
+      await api.post("/companies", {
         name,
         ruc,
         address,
@@ -28,16 +33,17 @@ export default function CompanyForm() {
         sector
       }, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${token}`
         }
       });
 
       setSuccess(' Se ha agregado correctamente');
 
       setTimeout(() => {
-        navigate('/admin');
+        navigate('/admin/companies');
       }, 1500);
     } catch (err) {
+      console.error("Error al crear la compañía:", err)
       setError('Error al crear la compañía');
     }
   };

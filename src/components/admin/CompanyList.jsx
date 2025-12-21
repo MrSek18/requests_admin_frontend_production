@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
+import { warmUpDatabase } from "./utils/warmUp";
 
 export default function CompanyList() {
   const [companies, setCompanies] = useState([]);
@@ -8,13 +9,26 @@ export default function CompanyList() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/api/companies`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+    const fetchCompanies = async () => {
+      try {
+        await warmUpDatabase();
+        const authData = JSON.parse(localStorage.getItem("auth"));
+        const token = authData?.token;
+      
+        const res = await api.get("/companies", {
+          headers: { Authorization: `Bearer ${token}`}
+        });
+
+        setCompanies(res.data);
+      } catch (err){
+        console.error("Error al cargar compañías: ", err);
+        setError("Error al cargar compañías");
       }
-    })
-    .then(res => setCompanies(res.data))
-    .catch(() => setError('Error al cargar compañías'));
+    };
+
+
+    fetchCompanies();
+
   }, []);
 
   return (

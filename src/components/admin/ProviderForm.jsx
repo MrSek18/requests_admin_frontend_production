@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api'; 
+import { warmUpDatabase } from "./utils/warmUp";
+
 
 export default function ProviderForm() {
   const [name, setName] = useState('');
@@ -18,7 +20,13 @@ export default function ProviderForm() {
     setSuccess('');
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/providers`, {
+
+      await warmUpDatabase();
+      const authData = JSON.parse(localStorage.getItem("auth"));
+      const token = authData?.token;
+
+
+      await api.post("/providers", {
         name,
         ruc,
         address,
@@ -30,12 +38,13 @@ export default function ProviderForm() {
         }
       });
 
-      setSuccess('✅ Se ha agregado correctamente');
+      setSuccess('Se ha agregado correctamente');
 
       setTimeout(() => {
-        navigate('/admin');
+        navigate('/admin/providers');
       }, 1500);
     } catch (err) {
+      console.error("Error al crear proveedor: ", err);
       setError('Error al crear el proveedor');
     }
   };
