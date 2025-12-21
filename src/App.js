@@ -15,10 +15,11 @@ import ProviderForm from './components/admin/ProviderForm';
 import ProviderList from './components/admin/ProviderList';
 import RepresentativeForm from "./components/admin/RepresentativeForm";
 import RepresentativeList from "./components/admin/RepresentativeList";
+import { warmUpDatabase } from "./utils/warmUp";
 
 // Configuración global de Axios
 axios.defaults.baseURL = `${process.env.REACT_APP_API_URL}/api`;
-axios.defaults.withCredentials = true; // ✅ Importante para cookies con Sanctum
+axios.defaults.withCredentials = true; 
 
 function App() {
   const [user, setUser] = useState(null);
@@ -51,6 +52,7 @@ function App() {
         axios.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${authData.token}`;
+        await warmUpDatabase();
         const response = await axios.get("/admin");
         setUser(response.data.user || authData.user);
       } catch (error) {
