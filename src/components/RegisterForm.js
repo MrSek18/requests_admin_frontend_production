@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { warmUpDatabase } from "./utils/warmUp";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -94,7 +95,7 @@ const RegisterForm = () => {
       // Preparar payload
       const payload = { ...formData };
 
-      // Llamar API (sin guardar en variable no usada)
+      await warmUpDatabase();
       await axios.post(
         `${process.env.REACT_APP_API_URL}/api/register`,
         payload,
