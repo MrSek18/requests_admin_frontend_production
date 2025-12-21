@@ -1,7 +1,8 @@
-// src/components/admin/ProviderList.jsx
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api';
+import { warmUpDatabase } from "../../utils/warmUp";
 
 export default function ProviderList() {
   const [providers, setProviders] = useState([]);
@@ -9,13 +10,23 @@ export default function ProviderList() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/api/providers`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+
+    const fetchProviders = async () => {
+      try {
+        await warmUpDatabase();
+        const authData = JSON.parse(localStorage.getItem("auth"));
+        const token = authData?.token;
+        const res = await api.get("/providers", {
+          headers: { Authorization: `Bearer ${token}`}
+        });
+        setProviders(res.data);
+      } catch (err) {
+        console.error("Error al cargar proveedores:", err);
+        setError("Error al cargar proveedores");
       }
-    })
-    .then(res => setProviders(res.data))
-    .catch(() => setError('Error al cargar proveedores'));
+    }
+    
+    fetchProviders();
   }, []);
 
   return (
