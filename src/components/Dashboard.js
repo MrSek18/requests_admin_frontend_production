@@ -7,7 +7,6 @@ const Dashboard = ({ user, onLogout }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [, setRequerimientos] = useState([]);
   const [, setToken] = useState(null);
   // Ref para evitar dependencias cambiantes en onLogout
   const onLogoutRef = useRef(onLogout);
@@ -58,29 +57,6 @@ const Dashboard = ({ user, onLogout }) => {
     fetchUserData();
   }, [user]);
 
-  // useEffect para requerimientos recientes
-  useEffect(() => {
-    const fetchRequerimientos = async () => {
-      try {
-        const authData = JSON.parse(localStorage.getItem("auth"));
-        const token = authData?.token;
-
-        if (!token) throw new Error("No hay token disponible");
-
-        const res = await api.get("/api/requests/recent", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        setRequerimientos(res.data);
-      } catch (err) {
-        console.error("Error al cargar requerimientos:", err);
-      }
-    };
-
-    fetchRequerimientos();
-  }, [user]);
 
   if (loading) {
     return (

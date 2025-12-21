@@ -16,7 +16,7 @@ export default function UnitList() {
         const authData = JSON.parse(localStorage.getItem("auth"));
         const token = authData?.token;
 
-        const res = await api.get("/services", {
+        const res = await api.get("/units", {
           headers: { Authorization: `Bearer ${token}`}
         })
 
