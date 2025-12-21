@@ -25,7 +25,7 @@ const Dashboard = ({ user, onLogout }) => {
         }
 
         api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        const response = await api.get("/api/admin", {
+        const response = await api.get("/admin", {
           withCredentials: true,
         });
 
