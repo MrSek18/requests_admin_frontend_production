@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { warmUpDatabase } from "./utils/warmUp";
+import { warmUpDatabase } from "../utils/warmUp";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({

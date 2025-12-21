@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import api from "../api";
 import AdminActions from "./AdminActions";
+import { warmUpDatabase } from "../utils/warmUp";
 
 const Dashboard = ({ user, onLogout }) => {
   const [userData, setUserData] = useState(null);
@@ -16,6 +17,7 @@ const Dashboard = ({ user, onLogout }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        await warmUpDatabase();
         const authData = JSON.parse(localStorage.getItem("auth"));
         const token = authData?.token;
         setToken(token);
