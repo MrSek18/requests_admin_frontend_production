@@ -52,7 +52,7 @@ export default function Configuracion({ user, onLogout }) {
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     await warmUpDatabase();
     const payload = { [field]: formData[field] }; 
-    await api.put(`/api/admins/${user.id}`, payload);
+    await api.put(`/admins/${user.id}`, payload);
 
     setStatusMessage((prev) => ({
       ...prev,
