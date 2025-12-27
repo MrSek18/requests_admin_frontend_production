@@ -9,6 +9,7 @@ function LoginForm({ onLogin }) {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const [showCredenciales, setShowCredenciales] = useState(false);
 
   useEffect(() => {
     const authData = JSON.parse(localStorage.getItem("auth"));
@@ -167,7 +168,8 @@ function LoginForm({ onLogin }) {
               />
             </div>
           </div>
-          <div className="flex items-center justify-between gap-4">
+          <div className="h-full w-full flex flex-col gap-2 ">
+            {/* Botón principal ocupa todo el ancho */}
             <button
               type="submit"
               disabled={isLoading}
@@ -203,7 +205,51 @@ function LoginForm({ onLogin }) {
                 "Ingresar"
               )}
             </button>
+
+            {/* Fila con dos botones mitad y mitad */}
+            <div className="flex gap-4 w-full">
+              <div className="w-1/2 flex flex-col items-center gap-2 ">
+                <button
+                  type="button"
+                  onClick={() => setShowCredenciales(true)}
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 tracking-[0.10em]"
+                >
+                  Ver credenciales
+                </button>
+
+                {showCredenciales && (
+                  <div className="absolute top-0 left-0 w-full bg-white text-gray-800 p-4 rounded shadow-lg z-50">
+                    {/* Botón de cierre */}
+                    <button
+                      onClick={() => setShowCredenciales(false)}
+                      className="absolute top-2 right-2 text-gray-600 hover:text-black font-bold"
+                    >
+                      ✕
+                    </button>
+
+                    {/* Contenido */}
+                    <p className="text-sm font-mono mb-2">
+                      <strong>Correo:</strong> admin@panel.com
+                    </p>
+                    <p className="text-sm font-mono">
+                      <strong>Contraseña:</strong> OtraContraseñaSegura3213
+                    </p>
+                  </div>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() =>
+                  (window.location.href =
+                    "https://requests-user-frontend-production.vercel.app/")
+                }
+                className="w-1/2 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600 tracking-[0.10em]"
+              >
+                Panel de Usuarios
+              </button>
+            </div>
           </div>
+
         </form>
       </div>
     </div>
